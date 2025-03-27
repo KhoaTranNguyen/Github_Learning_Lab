@@ -7,36 +7,32 @@ void swap(int *xp, int *yp){
     *yp = temp;
 }
 
-int sel_sort(int *arr, int size){
-    int counter = 0;
-    for(int *p = &arr[0]; p < &arr[size]; p++){
-        int *min_idx = p;
-        for(int *i = p; i < &arr[size]; i++){
-            if(*i<*min_idx){
-                min_idx = i;
-            }
+void sel_sort(int *Arr, int more_than_last){
+
+    int *ptr = &Arr[0];
+
+    while (ptr < &Arr[more_than_last]){
+
+        int *store_smaller_idx = ptr;
+        for(int *i = ptr+1; i < &Arr[more_than_last]; i++){
+            if(*i < *store_smaller_idx) store_smaller_idx = i;
         }
-        if(p != min_idx){
-            swap(p, min_idx);
-            counter++;
+
+        if(ptr != store_smaller_idx){
+            swap(ptr, store_smaller_idx);
         }
+
+        ptr++;
     }
-    return counter;
 }
 
 int main(){
-    int arr[3][20] = {
-        {1, 16, 12, 26, 25, 35, 33, 58, 45, 42, 56, 67, 83, 75, 74, 86, 81, 88, 99, 95},
-        {1, 17, 21, 42, 24, 27, 32, 35, 45, 47, 57, 23, 66, 69, 70, 76, 87, 85, 95, 99},
-        {22, 20, 81, 38, 95, 84, 99, 12, 79, 44, 26, 87, 96, 10, 48, 80, 1, 31, 16, 92}
-    };
+    int Arr[] = {1, 16, 12, 26, 25, 35, 33, 58, 45, 42, 56, 67, 83, 75, 74, 86, 81, 88, 99, 95};
+    int size = sizeof(Arr) / sizeof(int);
+    
+    sel_sort(Arr, size);
 
-    for(int n = 0; n<3; n++){ 
-        int x = sizeof(arr[n]) / sizeof(int);
-        int efficiency = sel_sort(arr[n], x);
-        for (int i = 0; i<x; i++){
-            printf("%d ", arr[n][i]);
-        }
-        printf("[eff_arr_%d = %d]\n", n+1, efficiency);
-    }
+    for (int i = 0; i < size; i++){
+        printf("%d ", Arr[i]);
+    } printf("\n");
 }
