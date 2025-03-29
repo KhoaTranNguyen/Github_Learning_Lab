@@ -1,6 +1,7 @@
 import streamlit as st
 from graphviz import Digraph
 
+# Function to create and display DFA
 def create_dfa(states, alphabet, transitions, start_state, accept_states):
     dfa = Digraph()
     
@@ -21,8 +22,7 @@ def create_dfa(states, alphabet, transitions, start_state, accept_states):
     for (src, via), dst in transitions.items():
         dfa.edge(src, dst, label=via)
     
-    return dfa# Function to create and display DFA
-
+    return dfa
 
 # Streamlit UI
 def main():
