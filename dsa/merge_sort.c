@@ -19,7 +19,7 @@ void mergeParts(int *arr, int left, int mid, int right) {
 
     // Copy the sorted elements back into the original array
     for (int i = 0; i < size; i++) {
-        if (arr[left + i] != temp[i])
+        if (arr[left + i] != temp[i]) // Add condition to reduce the cases
             arr[left + i] = temp[i];
     }
 
