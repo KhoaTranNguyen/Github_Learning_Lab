@@ -60,12 +60,14 @@ int main() {
     book1.setYear(1949);
     book1.setPublisher("Secker & Warburg");
 
+    // Display book1 details
+    printBookDetails(book1);
+
     // Create another Book object using the parameterized constructor
     Book book2("J.K. Rowling", "Harry Potter and the Philosopher's Stone", "Hardcover", 19.99, 1997, "Bloomsbury");
 
-    // Display book1 & book2 details
-    printBookDetails(book1);
+    // Display book2 details
     printBookDetails(book2);
-    
+
     return 0;
 }
