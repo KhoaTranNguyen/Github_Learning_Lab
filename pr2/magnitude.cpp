@@ -22,7 +22,7 @@ void insertion_sort(complex<double> *a, int size) {
 }
 
 int main() {
-    ifstream my_file("example.txt");
+    ifstream my_file("magnitude_ex.txt");
 
     if (!my_file) {
         cout << "Error: Unable to open the file." << endl;
