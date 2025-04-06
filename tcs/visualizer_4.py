@@ -18,7 +18,6 @@ def main():
         if num_states > 0 
         else ['⏸️ No states defined']
     )
-    st.session_state.show_warning = False
 
     # --- Alphabet Configuration ---
     alphabet_input = st.text_input(
@@ -47,20 +46,18 @@ def main():
     symbol_changed = st.session_state.last_symbol_config != transition_symbols
     structure_changed = state_changed or symbol_changed
 
-    # --- Update Matrix only if configuration has changed ---
+    # --- Update Matrix if structure has changed ---
     if structure_changed:
-        st.session_state.cache_matrix = st.session_state.transition_matrix.copy()
         new_matrix = pd.DataFrame(index=state_labels, columns=transition_symbols)
         old_matrix = st.session_state.cache_matrix
 
-        # Preserve existing values if keys are shared
-        shared_states = new_matrix.index.intersection(old_matrix.index)
-        shared_symbols = new_matrix.columns.intersection(old_matrix.columns)
-        for state in shared_states:
-            for symbol in shared_symbols:
-                new_matrix.loc[state, symbol] = old_matrix.loc[state, symbol]
+        # Copy shared values
+        shared_rows = new_matrix.index.intersection(old_matrix.index)
+        shared_cols = new_matrix.columns.intersection(old_matrix.columns)
+        for row in shared_rows:
+            for col in shared_cols:
+                new_matrix.loc[row, col] = old_matrix.loc[row, col]
 
-        st.session_state.show_warning = True
         st.session_state.cache_matrix = new_matrix
 
     # --- Define Column Config for Selectboxes ---
@@ -77,7 +74,7 @@ def main():
 
     # --- Show Interactive Editor ---
     edited_matrix = st.data_editor(
-        st.session_state.cache_matrix, #st.session_state.transition_matrix,
+        st.session_state.cache_matrix,
         key="matrix_editor",
         column_config=column_config,
         use_container_width=True,
@@ -112,30 +109,17 @@ def main():
         time.sleep(1)
         my_bar.empty()
 
+        # Save the edited matrix and configurations
         st.session_state.transition_matrix = edited_matrix
+        st.session_state.cache_matrix = edited_matrix.copy()
         st.session_state.last_state_config = (num_states, state_labels.copy())
         st.session_state.last_symbol_config = transition_symbols.copy()
-        #st.session_state.last_values_config = st.session_state.transition_matrix.fillna(0).values.copy().tolist()
-        st.success('Your change has been saved.', icon="✅")
         st.session_state.show_warning = False
-        # if not config_changed: st.info('Nothing has been edited recently', icon="ℹ️")
+
+        st.success('Your change has been saved.', icon="✅")
 
     if st.session_state.show_warning:
         st.warning("Your edit has not been saved.", icon="⚠️")
 
 if __name__ == "__main__":  
     main()
-
-    # # --- Validation: Detect Invalid Transitions ---
-    # invalid_transitions = []
-    # for state in edited_matrix.index:
-    #     for symbol in edited_matrix.columns:
-    #         val = edited_matrix.loc[state, symbol]
-    #         if isinstance(val, str) and val and val not in state_labels:
-    #             invalid_transitions.append((state, symbol, val))
-
-    # if invalid_transitions:
-    #     st.warning(f"⚠️ {len(invalid_transitions)} invalid transition(s) detected. These point to undefined states.")
-    #     with st.expander("View invalid transitions"):
-    #         for row, col, val in invalid_transitions:
-    #             st.write(f"🔸 Transition from `{row}` on symbol `{col}` points to undefined state `{val}`.")
