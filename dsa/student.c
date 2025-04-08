@@ -53,38 +53,6 @@ void printAllStudentInfo(Student *head){
 
 void addFirstStudent(Student **head){
     Student *newStudent = (Student*) malloc(sizeof(Student));
-    if (newStudent == NULL) {
-        printf("Memory allocation failed!\n");
-        return;
-    }
-
-    printf("Enter name: ");
-    scanf("%s", newStudent->name);
-
-    printf("Enter ID: ");
-    scanf(" %d", &newStudent->student_id);  // Notice the space
-
-    printf("Enter GPA: ");
-    scanf(" %f", &newStudent->gpa);         // Notice the space
-
-    Student* lastStudent = NULL;
-
-    Student* current = head;
-    while (current != NULL) {
-        if (current->next == NULL) {
-            lastStudent = current;  // Found the last node
-            break;
-        }
-        current = current->next;
-    }
-}
-
-void addLastStudent(Student **head){
-    Student *newStudent = (Student*) malloc(sizeof(Student));
-    if (newStudent == NULL) {
-        printf("Memory allocation failed!\n");
-        return;
-    }
 
     printf("Enter name: ");
     scanf("%s", newStudent->name);
@@ -97,6 +65,135 @@ void addLastStudent(Student **head){
 
     newStudent->next = *head;
     *head = newStudent;
+}
+
+Student* findLastStudent(Student **head){
+    Student* lastStudent = NULL;
+
+    Student* current = *head;
+    while(current != NULL){
+        if (current->next == NULL){
+            lastStudent = current;
+            break;
+        }
+        current = current->next;
+    }
+
+    return lastStudent;
+}
+
+void addLastStudent(Student **head){
+
+    Student* newStudent = (Student*) malloc(sizeof(Student));
+
+    printf("Enter name: ");
+    scanf("%s", newStudent->name);
+
+    printf("Enter ID: ");
+    scanf(" %d", &newStudent->student_id);  // Notice the space
+
+    printf("Enter GPA: ");
+    scanf(" %f", &newStudent->gpa);         // Notice the space
+
+    Student* lastStudent = findLastStudent(head);
+
+    lastStudent->next = newStudent;
+}
+
+void deleteStudentInfo (Student **head, int cs) {
+    if (*head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+
+    int selectedID, deletedStudent = 0;
+    char selectedName[100];
+    if (cs == 6){
+        printf("Enter the student ID to delete: ");
+        scanf(" %d", &selectedID);
+    }
+    else if (cs == 7){
+        printf("Enter the student name to delete: ");
+        scanf(" %s", selectedName);
+    }
+
+    Student *current = *head;
+    Student *previous = NULL;
+
+    while (current != NULL) {
+
+        if ((cs == 6 && current->student_id == selectedID) ||
+            (cs == 7 && strcmp(current->name, selectedName) == 0)) {
+            
+            if (previous == NULL) // Deleting the head node
+                *head = current->next;
+            else // Deleting a node after head
+                previous->next = current->next;
+
+            free(current);
+
+            if (cs == 6){
+                printf("Student with ID %d has been deleted.\n", selectedID);
+                return;
+            }
+            else if (cs == 7){
+                deletedStudent++;
+            }
+        }
+
+        previous = current;
+        current = current->next;
+
+    }
+    if (cs == 6)
+        printf("Student with ID %d not found.\n", selectedID);
+    else
+        printf("%d students with the Name: %s has been deleted.\n", deletedStudent, selectedName);
+}
+
+void swap(Student *xp, Student *yp) {
+    // Temporary variables to hold the data
+    char tempName[100];
+    int tempID;
+    float tempGPA;
+
+    // Swap name
+    strcpy(tempName, xp->name);
+    strcpy(xp->name, yp->name);
+    strcpy(yp->name, tempName);
+
+    // Swap student ID
+    tempID = xp->student_id;
+    xp->student_id = yp->student_id;
+    yp->student_id = tempID;
+
+    // Swap GPA
+    tempGPA = xp->gpa;
+    xp->gpa = yp->gpa;
+    yp->gpa = tempGPA;
+}
+
+void sortListbyGPA(Student **head){
+    if (*head == NULL || (*head)->next == NULL) {
+        // List is empty or has only one node, no need to sort
+        return;
+    }
+
+    Student *current = *head;
+    
+    while(current != NULL){
+        Student *temp = current;
+        Student *i = current->next;
+        while (i != NULL){
+            if (i->gpa < temp->gpa)
+                temp = i;
+            i = i->next;
+        }
+        if(current != temp)
+            swap(current, temp);
+
+        current = current->next;
+    }
 }
 
 int main() {
@@ -126,7 +223,7 @@ int main() {
                 {
                     displayProgress("", 2);
                     printAllStudentInfo(studentList);
-                    displayProgress("This is the last student of the list..", 2);
+                    displayProgress("This is the end of the list..", 2);
                 }
                 break;
             case 4:
@@ -138,6 +235,25 @@ int main() {
             case 5:
                 {
                     addLastStudent(&studentList);
+                    displayProgress("", 2);
+                }
+                break;
+            case 6:
+                {
+                    deleteStudentInfo(&studentList, 6);
+                    displayProgress("", 2);
+                }
+                break;
+            case 7:
+                {
+                    deleteStudentInfo(&studentList, 7);
+                    displayProgress("", 2);
+                }
+                break;
+            case 8:
+                {
+                    sortListbyGPA(&studentList);
+                    printAllStudentInfo(studentList);
                     displayProgress("", 2);
                 }
                 break;

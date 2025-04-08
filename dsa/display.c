@@ -33,7 +33,10 @@ void displayMenu() {
     printf("1. Create an empty linked list of students\n");
     printf("2. Print the number of nodes in the list\n");
     printf("3. Print all information of all students\n");
-    printf("4. Enter information of a student and add he/her at the beginning of the list\n");
-    printf("5. Enter information of a student and add he/her at the end of the list\n");
+    printf("4. Enter information of a student and add he/she at the beginning of the list\n");
+    printf("5. Enter information of a student and add he/she at the end of the list\n");
+    printf("6. Delete a student with the provided ID\n");
+    printf("7. Delete all students with the provided name\n");
+    printf("8. Sort the list by gpa\n");
     printf("9. Exit\n");
 }                               

@@ -15,7 +15,8 @@ void sel_sort(int *Arr, int more_than_last){
 
         int *store_smaller_idx = ptr;
         for(int *i = ptr+1; i < &Arr[more_than_last]; i++){
-            if(*i < *store_smaller_idx) store_smaller_idx = i;
+            if(*i < *store_smaller_idx)
+                store_smaller_idx = i;
         }
 
         if(ptr != store_smaller_idx){
