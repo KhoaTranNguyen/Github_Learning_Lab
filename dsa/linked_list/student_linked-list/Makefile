@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g
 
 # Source files
-SRC = printLots.c
+SRC = student.c display.c
 
 # Output executable name
 TARGET = student

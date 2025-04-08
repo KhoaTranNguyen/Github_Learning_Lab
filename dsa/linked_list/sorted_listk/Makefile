@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g
 
 # Source files
-SRC = printLots.c
+SRC = sorted_listk.c
 
 # Output executable name
 TARGET = student
