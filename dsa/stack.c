@@ -84,6 +84,34 @@ bool peek(Stack* stack, bool getNum, int* out_num, char* out_ch) {
     return true;
 }
 
+bool contain(Stack* stack, bool getNum, int num, char ch) {
+    if (isEmpty(stack)) {
+        printf("contain: Empty stack\n");
+        return false;
+    }
+
+    Stack* temp = stack;
+
+    // Traverse to last node
+    if (getNum) {
+        while (temp->next != NULL && temp->number != num) {
+            temp = temp->next;
+        }
+    }
+    else {
+        while (temp->next != NULL && temp->expression != ch) {
+            temp = temp->next;
+        }
+    }
+
+    if ((getNum && temp->number == num) ||
+        (!getNum && temp->expression == ch)) {
+        return true;
+    }
+
+    return false;
+}
+
 bool push(Stack** stack, int num, char ch){
     
     if((*stack) == NULL) {

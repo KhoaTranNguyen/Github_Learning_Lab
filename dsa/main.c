@@ -5,6 +5,8 @@
 #include "stack.h"
 
 bool matchingBrackets(char input[]) {
+    printf("------\nChecking brackets: %s..\n\n", input);
+
     Stack* newStack = createStack();
 
     for (int i = 0; input[i] != '\0'; i++) {
@@ -17,8 +19,10 @@ bool matchingBrackets(char input[]) {
         else if (ch == ')' || ch == ']' || ch == '}') {
             printf("reach: %c\n", ch);
 
-            if (isEmpty(newStack))
-                return 0;
+            if (isEmpty(newStack)){
+                printf("\nBrackets do NOT match!\n");
+                return false;
+            }
             
             char top;
             pop(&newStack, false, NULL, &top);
@@ -26,7 +30,8 @@ bool matchingBrackets(char input[]) {
             if (!((ch == ')' && top == '(') ||
                   (ch == ']' && top == '[') ||
                   (ch == '}' && top == '{'))) {
-                return 0;
+                printf("\nBrackets do NOT match!\n");
+                return false;
             }
         }
     }
@@ -35,14 +40,20 @@ bool matchingBrackets(char input[]) {
     
     freeStack(&newStack);
 
-    return result ? 1 : 0;
+    if (result) {
+        printf("\nBrackets match!\n");
+        return true;
+    } else {
+        printf("\nBrackets do NOT match!\n");
+        return false;
+    }
 }
 
 bool postfixCheck(const char input[]) {
-    printf("postfix: %s\n", input);
+    printf("------\nChecking postfix: %s...\n", input);
 
     // Must start with a digit
-    if (!(input[0] >= '0' && input[0] <= '9')) return 0;
+    if (!(input[0] >= '0' && input[0] <= '9')) return false;
 
     int operandCount = 0;
     int operatorCount = 0;
@@ -55,22 +66,35 @@ bool postfixCheck(const char input[]) {
         }
         else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
             // Must have at least 2 operands to apply an operator
-            if (operandCount < 2) return 0;
+            if (operandCount < 2) {
+                printf("Invalid!\n");
+                return false;
+            }
 
             operandCount--;  // two operands reduced to one after operation
             operatorCount++;
         }
         else {
             // Invalid character
-            return 0;
+            printf("Invalid!\n");
+            return false;
         }
     }
 
     // At the end, there must be exactly one operand (the result)
-    return operandCount == 1;
+    if (operandCount == 1) {
+        printf("Valid!\n");
+        return true;
+    }
+    else {
+        printf("Invalid!\n");
+        return false;
+    }
 }
 
 Stack* postfixEval(char input[]) {
+    printf("------\nEvaluating postfix: %s..\n\n", input);
+
     Stack* newStack = createStack();
 
     for (int i = 0; input[i] != '\0'; i++) {
@@ -109,11 +133,12 @@ Stack* postfixEval(char input[]) {
     int final;
     if (pop(&newStack, true, &final, NULL)) {
         if (isEmpty(newStack)) {
-            printf("Eval is %d!\n", final);
+            printf("\nSuccess!\nEval is %d!\n", final);
             freeStack(&newStack);
         }
         else {
             Stack* current = newStack;
+            printf("\n");
             while (current != NULL) {
                 printf("%d ", current->number);
                 Stack* temp = current;
@@ -126,21 +151,92 @@ Stack* postfixEval(char input[]) {
 
     return NULL;
 }
- int main() {
-    // char input[50] = "[a+b{1*2]9*1}+(2-1)";
 
-    // if (matchingBrackets(input)) {
-    //     printf("Brackets match!\n");
-    // } else {
-    //     printf("Brackets do NOT match!\n");
-    // }
-
-    char postfix[50] = "321*+98--";
-
-    // postfixEval(postfix);
+int priority(char c) {
     
-    int check = postfixCheck(postfix);
-    printf("%d\n", check);
+    if (c == '/' || c == '*')
+        return 2;
+    else if (c == '+' || c == '-')
+        return 1;
+    else
+        return -1;
+}
+
+bool InfixToPostfix(char input[], char* postfix) {
+    
+    matchingBrackets(input);
+
+    Stack* tempStack = createStack();
+
+    printf("------\nConverting infix...\n\n");
+    for (int i = 0; input[i] != '\0'; i++) {
+        if ('0' <= input[i] && input[i] <= '9'){
+            strncat(postfix, &input[i], 1);
+        }
+        else {
+            if (input[i] == '(') {
+                push(&tempStack, 0, input[i]);
+            }
+            else if (input[i] == ')') {
+                char temp = '\0';
+                while (temp != '(' && !isEmpty(tempStack)) {
+                    pop(&tempStack, false, NULL, &temp);
+                    if (temp != '(') {
+                        strncat(postfix, &temp, 1);
+                    }
+                }
+            }
+            else {
+                char top;
+                peek(tempStack, false, NULL, &top);
+                if (priority(input[i]) > priority(top) ||
+                    isEmpty(tempStack) || contain(tempStack, false, 0, '(')) {
+                        push(&tempStack, 0, input[i]);
+                    }
+                else {
+                    while (priority(input[i]) <= priority(top)) {
+                        pop(&tempStack, false, NULL, &top);
+                        strncat(postfix, &top, 1);
+                    }
+                    push(&tempStack, 0, input[i]);
+                }
+            }
+        }
+    }
+
+    while (!isEmpty(tempStack)) {
+        char top;
+        pop(&tempStack, false, NULL, &top);
+        strncat(postfix, &top, 1);
+    }
+
+    printf("\nConverted: %s\n", postfix);
+
+    bool check = postfixCheck(postfix);
+    if (check != true) {
+        printf("------\nConvert failed!\n");
+        return false;
+    }
+
+    printf("------\nConverted success!\n\ninfix: %s\npostfix: %s\n", input, postfix);
+    return true;
+}
+
+int main() {
+    char input[50] = "[a+b{1*2]9*1}+(2-1)";
+
+    matchingBrackets(input);
+
+    char postFix[50] = "122+3*+456+/-";
+
+    postfixEval(postFix);
+    postfixCheck(postFix);
+    
+    char infix[50] = "(1+(1+2)*3)-(4/(5+6))"; //112+3*+456+/-
+    char postfix[50];
+    postfix[0] = '\0'; // ✅ important!
+    if (InfixToPostfix(infix, postfix))
+        postfixEval(postfix);
 
     return 0;
 }

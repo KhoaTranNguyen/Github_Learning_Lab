@@ -16,6 +16,7 @@ bool isEmpty(Stack* head);
 bool pop(Stack** stack, bool getNum, int* out_num, char* out_ch);
 bool peek(Stack* stack, bool getNum, int* out_num, char* out_ch);
 bool push(Stack** stack, int num, char ch);
+bool contain(Stack* stack, bool getNum, int num, char ch);
 void freeStack(Stack** stack);
 
 #endif
