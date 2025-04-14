@@ -12,37 +12,13 @@ Stack* createStack(){
     return newStack;
 }
 
-bool isEmpty(Stack* head, bool report) {
-    if (!report) {
-        return (head == NULL || !head->data);
-    }
-    else {
-        int value;
-        if (pop(&head, true, &value, NULL)) {
-            if (isEmpty(head, false)) {
-                printf("Nothing left. Eval is %d!\n", value);
-                freeStack(&head);
-            }
-            else {
-                Stack* current = head;
-                while (current != NULL) {
-                    printf("%d ", current->number);
-                    Stack* temp = current;
-                    current = current->next;
-                    free(temp);
-                }
-                printf("left!\n");
-            }
-            return false;  // Since stack is not empty, but it is for reporting only, not meant for logic
-        }
-        
-        return true; //Cannot pop, stack is empty
-    }
+bool isEmpty(Stack* head) {
+    return (head == NULL || !head->data);
 }
 
 
 bool pop(Stack** stack, bool getNum, int* out_num, char* out_ch) {
-    if (isEmpty(*stack, false)) {
+    if (isEmpty(*stack)) {
         printf("pop: Empty stack\n");
         return false;
     }
@@ -85,7 +61,7 @@ bool pop(Stack** stack, bool getNum, int* out_num, char* out_ch) {
 }
 
 bool peek(Stack* stack, bool getNum, int* out_num, char* out_ch) {
-    if (isEmpty(stack, false)) {
+    if (isEmpty(stack)) {
         printf("top: Empty stack\n");
         return false;
     }
