@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g
 
 # Source files
-SRC = queue.c
+SRC = main.c queue.c
 
 # Output executable name
 TARGET = main
