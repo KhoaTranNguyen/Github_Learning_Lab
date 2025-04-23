@@ -1,0 +1,3 @@
+ConnectionString
+-------------------------------------------------------------------------------------------------------------------------------
+HostName=gps-sensor-khoatran.azure-devices.net;DeviceId=gps-sensor;SharedAccessKey=YY2o7dcuVNU8jtme+Xr7LCmwYiGDAJoTqPWZ7D3rO08=
