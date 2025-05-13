@@ -25,5 +25,5 @@ class Person {
 
 class Employee: public Person {
     protected:
-        string department
+        string department;
 };
