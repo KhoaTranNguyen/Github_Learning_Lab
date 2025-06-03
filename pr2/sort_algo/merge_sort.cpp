@@ -3,7 +3,7 @@
 void mergeParts(int *arr, int left, int mid, int right){
     int i = left, j = mid + 1;
     int k = 0;
-    int* temp = new int[right];
+    int* temp = new int[right - left + 1];
 
     while (i <= mid && j <= right){
         // i: left → mid, j: mid+1 → right
