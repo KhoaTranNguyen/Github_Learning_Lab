@@ -21,5 +21,9 @@ int main() {
     char sequence[100];
     printf("Input an array of number (space separated): ");
     scanf("%s ", sequence);
+    printf("sequence: ");
+    for (int i = 0; i < 100; i++){
+        printf("%d", atoi(sequence));
+    }
     return 0;
 }
