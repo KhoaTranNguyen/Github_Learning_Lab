@@ -5,3 +5,7 @@
 # Ignore all .venv folders
 .venv/
 **/.venv/
+
+# Ignore all __pycache__ folders
+__pycache__/
+**/__pycache__/
