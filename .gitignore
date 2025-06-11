@@ -1,0 +1,7 @@
+# Ignore all .vscode folders
+.vscode/
+**/.vscode/
+
+# Ignore all .venv folders
+.venv/
+**/.venv/
