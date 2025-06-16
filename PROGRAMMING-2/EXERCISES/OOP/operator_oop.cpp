@@ -18,7 +18,7 @@ public:
     }
 
     // Overload the postfix ++ operator
-    Counter operator++(int) {
+    const Counter operator++(int) {
         Counter temp = *this; // Create a copy of the current object
         ++count_;             // Increment the count
         return temp;         // Return the copy (not incremented)
